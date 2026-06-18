@@ -1,0 +1,63 @@
+# Nexus Lattice Ecosystem .gitignore
+# Privacy-respecting, modular, self-documenting stack
+
+# === Secrets, Keys & Sensitive ===
+*.key
+*.pem
+*.crt
+secrets/
+.env
+.env.*
+*.wallet
+keystore/
+yggdrasil-peers.json
+yggdrasil.conf
+
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# === Rust (Grok Launcher) ===
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# === Docker & Compose ===
+docker-compose.override.yml
+.docker/
+
+# === Logs, Temp, Monitoring ===n*.log
+*.tmp
+logs/
+tmp/
+monitoring/data/
+
+# === OS & IDE ===
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# === Prototype Binaries & Firmware ===
+*.bin
+*.hex
+*.elf
+firmware/build/
+
+# === Blockchain sensitive ===
+*.abi.json  # unless public
+node_modules/  # if any web3 tooling
+
+# === General build artifacts ===
+*.o
+*.so
+*.dylib
