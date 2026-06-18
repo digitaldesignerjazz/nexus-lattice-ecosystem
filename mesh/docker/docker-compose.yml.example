@@ -1,0 +1,46 @@
+# Nexus Lattice - Example Docker Compose for Mesh Core
+# Copy to docker-compose.yml and customize for your environment (Hannover/EU peers, Tor/I2P, monitoring)
+# Run: docker compose up -d
+
+version: '3.8'
+
+services:
+  yggdrasil:
+    image: ghcr.io/yggdrasil-network/yggdrasil:latest
+    container_name: nexus-yggdrasil
+    restart: unless-stopped
+    network_mode: host  # Required for proper mesh overlay; or use macvlan for advanced
+    volumes:
+      - ./yggdrasil-config:/etc/yggdrasil
+      - yggdrasil-data:/var/lib/yggdrasil
+    # command: ["-useconffile", "/etc/yggdrasil/yggdrasil.conf"]
+    # For production: add healthcheck, resource limits
+    environment:
+      - YGGDRASIL_LOGLEVEL=info
+
+  # Optional: Tor proxy for privacy exit / hidden services on top of mesh
+  tor:
+    image: alpine:latest
+    container_name: nexus-tor
+    restart: unless-stopped
+    command: ["sh", "-c", "apk add --no-cache tor && tor"]
+    volumes:
+      - ./tor-config:/etc/tor
+    network_mode: host
+    depends_on:
+      - yggdrasil
+
+  # Placeholder for future Prometheus + node exporter for mesh health
+  # monitoring:
+  #   image: prom/prometheus
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+volumes:
+  yggdrasil-data:
+
+# Notes:
+# - Customize yggdrasil.conf with your private key, peers (European low-latency preferred for Hannover base)
+# - Integrate QNET / xMesh peers once available
+# - For Tenda Nova: run additional container or host service with USB/serial passthrough
+# - Security: Never expose admin interfaces publicly; use mesh-internal only or authenticated tunnels
